@@ -14,7 +14,16 @@ export async function handlerValidate(req: Request, res: Response) {
         responseError(res, 400, "Chirp is too long");
         return;
     }
+
+    const cleanedBody = censor(params.body);
     responseJSON(res, 200, {
-        valid: true,
+        cleanedBody: cleanedBody,
     });
+
+
+}
+function censor(input: string): string {
+    const badWords = ["kerfuffle", "sharbert", "fornax"];
+    const pattern = new RegExp(`\\b(${badWords.join("|")})\\b`, "gi");
+    return input.replace(pattern, "****");
 }
