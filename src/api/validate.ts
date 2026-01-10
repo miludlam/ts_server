@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
-
-import { responseError, responseJSON } from "./json.js";
+import { responseJSON } from "./json.js";
 
 export async function handlerValidate(req: Request, res: Response) {
     type parameters = {
@@ -11,17 +10,15 @@ export async function handlerValidate(req: Request, res: Response) {
 
     const maxChirpLength = 140;
     if (params.body.length > maxChirpLength) {
-        responseError(res, 400, "Chirp is too long");
-        return;
+        throw new Error("Chirp is too long");
     }
 
     const cleanedBody = censor(params.body);
     responseJSON(res, 200, {
         cleanedBody: cleanedBody,
     });
-
-
 }
+
 function censor(input: string): string {
     const badWords = ["kerfuffle", "sharbert", "fornax"];
     const pattern = new RegExp(`\\b(${badWords.join("|")})\\b`, "gi");
