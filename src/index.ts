@@ -6,8 +6,8 @@ import { handlerValidate } from "./api/validate.js";
 import {
     middlewareLogResponse,
     middlewareMetricsInc,
+    handlerError,
 } from "./api/middleware.js";
-import { handlerError } from "./api/error.js";
 
 const app = express();
 const PORT = 8080;
