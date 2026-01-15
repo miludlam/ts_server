@@ -1,8 +1,10 @@
 /tmp
 /out-tsc
 
+# Project files
 node_modules/
 dist/
+.env
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
