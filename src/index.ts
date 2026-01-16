@@ -7,6 +7,7 @@ import { handlerReadiness } from "./api/readiness.js";
 import { handlerMetrics } from "./api/metrics.js";
 import { handlerReset } from "./api/reset.js";
 import { handlerValidate } from "./api/validate.js";
+import { handlerCreateUser } from "./api/users.js";
 import {
     middlewareLogResponse,
     middlewareMetricsInc,
@@ -35,6 +36,9 @@ app.post("/admin/reset", (req, res, next) => {
 });
 app.post("/api/validate_chirp", (req, res, next) => {
     Promise.resolve(handlerValidate(req, res)).catch(next);
+});
+app.post("/api/users", (req, res, next) => {
+    Promise.resolve(handlerCreateUser(req, res)).catch(next);
 });
 
 app.use(handlerError);
