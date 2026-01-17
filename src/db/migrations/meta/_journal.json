@@ -8,6 +8,13 @@
       "when": 1768356363662,
       "tag": "0000_mute_blade",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768613685872,
+      "tag": "0001_woozy_scarlet_witch",
+      "breakpoints": true
     }
   ]
 }

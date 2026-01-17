@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
-import { responseJSON } from "./json.js";
+
 import { ErrorBadRequest } from "./errors.js";
+import { responseJSON } from "./json.js";
 
 export async function handlerValidate(req: Request, res: Response) {
     type parameters = {

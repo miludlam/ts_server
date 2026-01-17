@@ -1,14 +1,24 @@
 import type { Request, Response } from "express";
-import { responseJSON } from "./json.js";
-import { ErrorBadRequest } from "./errors.js";
+
 import { createUser } from "../db/queries/users.js";
+import { ErrorBadRequest } from "./errors.js";
+import { responseJSON } from "./json.js";
 
 export async function handlerCreateUser(req: Request, res: Response) {
-    if (!req.body.email) {
+    type parameters = {
+        email: string;
+    };
+    const params: parameters = req.body;
+
+    if (!params.email) {
         throw new ErrorBadRequest("Email is required");
     }
 
-    const user = await createUser({email: req.body.email})
+    const user = await createUser({email: params.email});
+    if (!user) {
+        throw new Error("User could not be created");
+    }
+
     responseJSON(res, 201, {
         id: user.id,
         email: user.email,
