@@ -39,6 +39,8 @@ export function handlerError(
     res: Response,
     __: NextFunction,
 ) {
+    console.log(err);
+
     if (err instanceof ErrorBadRequest) {
         responseError(res, 400, err.message);
     } else if (err instanceof ErrorUnauthorized) {
