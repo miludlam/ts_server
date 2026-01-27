@@ -16,7 +16,7 @@ export async function handlerCreateUser(req: Request, res: Response) {
     const params: parameters = req.body;
 
     if (!params.email || !params.password) {
-        throw new ErrorBadRequest("Missinrg required fields");
+        throw new ErrorBadRequest("Missing required fields");
     }
 
     const hashedPassword = await hashPassword(params.password);
