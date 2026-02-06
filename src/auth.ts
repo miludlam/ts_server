@@ -1,7 +1,8 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
-import { ErrorUnauthorized } from "./api/errors";
+import type { Request } from "express";
+import { ErrorUnauthorized, ErrorBadRequest } from "./api/errors.js";
 
 export async function hashPassword(password: string): Promise<string> {
     return await argon2.hash(password);
@@ -46,4 +47,11 @@ export function validateJWT(tokenString: string, secret: string) {
         throw new ErrorUnauthorized("No user ID in token");
     }
     return decoded.sub;
+}
+
+export function getBearerToken(req: Request) {
+    const token = req.get("Authorization")?.replace(/^Bearer\s+/, '');
+    if (!token || token === req.get("Authorization")) throw new ErrorBadRequest("Malformed authorization header");
+
+    return token;
 }
