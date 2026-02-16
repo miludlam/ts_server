@@ -2,20 +2,21 @@ import type { Request, Response } from "express";
 import type { UserResponse } from "./users.js";
 
 import { getUserByEmail } from "../db/queries/users.js";
-import { checkPasswordHash, makeJWT } from "../auth.js";
+import { saveRefreshToken } from "../db/queries/refresh.js";
+import { checkPasswordHash, makeJWT, makeRefreshToken } from "../auth.js";
 import { responseJSON } from "./json.js";
 import { ErrorUnauthorized } from "./errors.js";
 import { config } from "../config.js";
 
 type LoginResponse = UserResponse & {
-    token: string;
+    token: string
+    refreshToken: string;
 }
 
 export async function handlerLogin(req: Request, res: Response) {
     type parameters = {
         email: string;
         password: string;
-        expiresInSeconds?: number;
     };
     const params: parameters = req.body;
 
@@ -29,12 +30,14 @@ export async function handlerLogin(req: Request, res: Response) {
         throw new ErrorUnauthorized("Incorrect email or password");
     }
 
-    let duration = config.jwt.defaultDuration;
-    if (params.expiresInSeconds && !(params.expiresInSeconds > duration)) {
-        duration = params.expiresInSeconds;
-    }
-
+    // JWT access token
+    let duration = config.jwt.defaultDuration; // one hour in seconds
     const token = makeJWT(user.id, duration, config.jwt.secret);
+    // refresh token
+    let durationDaysInMS = duration * 24 * 60 * 1000; // 60 days in milliseconds
+    let expireDate = new Date(Date.now() + durationDaysInMS); // 60 days from now
+    const refToken = makeRefreshToken();
+    const tokenSaved = await saveRefreshToken(user.id, refToken, expireDate);
 
     responseJSON(res, 200, {
         id: user.id,
@@ -42,5 +45,6 @@ export async function handlerLogin(req: Request, res: Response) {
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
         token: token,
+        refreshToken: refToken,
     } satisfies LoginResponse);
 }
