@@ -37,7 +37,7 @@ export async function handlerLogin(req: Request, res: Response) {
     let durationDaysInMS = duration * 24 * 60 * 1000; // 60 days in milliseconds
     let expireDate = new Date(Date.now() + durationDaysInMS); // 60 days from now
     const refToken = makeRefreshToken();
-    const tokenSaved = await saveRefreshToken(user.id, refToken, expireDate);
+    await saveRefreshToken(user.id, refToken, expireDate);
 
     responseJSON(res, 200, {
         id: user.id,
