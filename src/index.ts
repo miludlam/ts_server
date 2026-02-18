@@ -5,12 +5,12 @@ import { drizzle } from "drizzle-orm/postgres-js";
 
 import { config } from "./config.js";
 
+import { handlerLogin, handlerRefresh, handlerRevoke } from "./api/auth.js";
 import {
     handlerCreateChirps,
     handlerGetAllChirps,
     handlerGetChirp
 } from "./api/chirps.js";
-import { handlerLogin } from "./api/login.js";
 import { handlerMetrics } from "./api/metrics.js";
 import {
     middlewareLogResponse,
@@ -18,9 +18,7 @@ import {
     handlerError,
 } from "./api/middleware.js";
 import { handlerReadiness } from "./api/readiness.js";
-import { handlerRefresh } from "./api/refresh.js";
 import { handlerReset } from "./api/reset.js";
-import { handlerRevoke } from "./api/revoke.js";
 import { handlerCreateUser } from "./api/users.js";
 
 const migrationClient = postgres(config.db.url, {max: 1});

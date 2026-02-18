@@ -1,7 +1,7 @@
-import { and, eq, gt, isNull, sql } from "drizzle-orm";
+import { and, eq, gt, isNull } from "drizzle-orm";
 
 import { db } from "../index.js";
-import {refreshTokens, users} from "../schema.js";
+import { refreshTokens, users } from "../schema.js";
 
 export async function saveRefreshToken(userID: string, token: string, expiresAt: Date) {
     const result = await db
@@ -32,4 +32,8 @@ export async function getUserByRefreshToken(token: string) {
         .limit(1);
 
     return result;
+}
+
+export async function revokeRefreshToken() {
+
 }

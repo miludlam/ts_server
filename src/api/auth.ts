@@ -1,12 +1,13 @@
 import type { Request, Response } from "express";
+
 import type { UserResponse } from "./users.js";
 
-import { getUserByEmail } from "../db/queries/users.js";
-import { saveRefreshToken } from "../db/queries/refresh.js";
-import { checkPasswordHash, makeJWT, makeRefreshToken } from "../auth.js";
-import { responseJSON } from "./json.js";
 import { ErrorUnauthorized } from "./errors.js";
+import { responseJSON } from "./json.js";
+import { checkPasswordHash, getBearerToken, makeJWT, makeRefreshToken } from "../auth.js";
 import { config } from "../config.js";
+import { getUserByEmail } from "../db/queries/users.js";
+import { getUserByRefreshToken, saveRefreshToken } from "../db/queries/refresh.js";
 
 type LoginResponse = UserResponse & {
     token: string
@@ -47,4 +48,31 @@ export async function handlerLogin(req: Request, res: Response) {
         token: token,
         refreshToken: refToken,
     } satisfies LoginResponse);
+}
+
+export async function handlerRefresh(req: Request, res: Response) {
+    const bearerToken = getBearerToken(req);
+    const result = await getUserByRefreshToken(bearerToken);
+    if (!result) {
+        throw new ErrorUnauthorized("Invalid refresh token");
+    }
+
+    let duration = config.jwt.defaultDuration; // one hour in seconds
+    const token = makeJWT(result.user.id, duration, config.jwt.secret);
+
+    responseJSON(res, 200, {
+        token: token,
+    });
+}
+
+export async function handlerRevoke(req: Request, res: Response) {
+    const bearerToken = getBearerToken(req);
+    const result = await getUserByRefreshToken(bearerToken);
+    if (!result) {
+        throw new ErrorUnauthorized("Invalid refresh token");
+    }
+
+
+
+    responseJSON(res, 204, {});
 }
