@@ -22,6 +22,13 @@
       "when": 1769128611169,
       "tag": "0002_tired_kronos",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771380003053,
+      "tag": "0003_wooden_harpoon",
+      "breakpoints": true
     }
   ]
 }
