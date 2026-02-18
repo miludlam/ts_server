@@ -7,7 +7,7 @@ import { responseJSON } from "./json.js";
 import { checkPasswordHash, getBearerToken, makeJWT, makeRefreshToken } from "../auth.js";
 import { config } from "../config.js";
 import { getUserByEmail } from "../db/queries/users.js";
-import { getUserByRefreshToken, saveRefreshToken } from "../db/queries/refresh.js";
+import { getUserByRefreshToken, revokeRefreshToken, saveRefreshToken } from "../db/queries/refresh.js";
 
 type LoginResponse = UserResponse & {
     token: string
@@ -67,12 +67,7 @@ export async function handlerRefresh(req: Request, res: Response) {
 
 export async function handlerRevoke(req: Request, res: Response) {
     const bearerToken = getBearerToken(req);
-    const result = await getUserByRefreshToken(bearerToken);
-    if (!result) {
-        throw new ErrorUnauthorized("Invalid refresh token");
-    }
+    await revokeRefreshToken(bearerToken);
 
-
-
-    responseJSON(res, 204, {});
+    res.status(204).send();
 }

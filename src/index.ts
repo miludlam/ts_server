@@ -5,7 +5,11 @@ import { drizzle } from "drizzle-orm/postgres-js";
 
 import { config } from "./config.js";
 
-import { handlerLogin, handlerRefresh, handlerRevoke } from "./api/auth.js";
+import {
+    handlerLogin,
+    handlerRefresh,
+    handlerRevoke
+} from "./api/auth.js";
 import {
     handlerCreateChirps,
     handlerGetAllChirps,

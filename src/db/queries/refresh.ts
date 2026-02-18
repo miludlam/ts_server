@@ -34,6 +34,11 @@ export async function getUserByRefreshToken(token: string) {
     return result;
 }
 
-export async function revokeRefreshToken() {
-
+export async function revokeRefreshToken(token: string) {
+    await db
+        .update(refreshTokens)
+        .set({
+            revokedAt: new Date(),
+        })
+        .where(eq(refreshTokens.token, token));
 }
