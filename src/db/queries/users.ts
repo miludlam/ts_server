@@ -20,6 +20,18 @@ export async function getUserByEmail(email: string) {
     return result[0];
 }
 
+export async function updateUser(userID: string, user: NewUser) {
+    const [result] = await db
+        .update(users)
+        .set({
+            email: user.email,
+            hashedPassword: user.hashedPassword,
+        })
+        .where(eq(users.id, userID))
+        .returning();
+    return result;
+}
+
 export async function reset() {
     await db.delete(users);
 }

@@ -23,7 +23,10 @@ import {
 } from "./api/middleware.js";
 import { handlerReadiness } from "./api/readiness.js";
 import { handlerReset } from "./api/reset.js";
-import { handlerCreateUser } from "./api/users.js";
+import {
+    handlerCreateUser,
+    handlerUpdateUser
+} from "./api/users.js";
 
 const migrationClient = postgres(config.db.url, {max: 1});
 await migrate(drizzle(migrationClient), config.db.migrationConfig);
@@ -74,6 +77,9 @@ app.post("/api/revoke", (req, res, next) => {
 app.post("/api/users", (req, res, next) => {
     Promise.resolve(handlerCreateUser(req, res)).catch(next);
 });
+app.put("/api/users", (req, res, next) => {
+    Promise.resolve(handlerUpdateUser(req, res)).catch(next);
+})
 
 app.use(handlerError);
 
