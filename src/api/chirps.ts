@@ -50,3 +50,7 @@ function validateAndCensor(input: string): string {
     const pattern = new RegExp(`\\b(${badWords.join("|")})\\b`, "gi");
     return input.replace(pattern, "****");
 }
+
+export async function handlerDeleteChirp(req: Request, res: Response) {
+
+}

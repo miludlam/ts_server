@@ -12,6 +12,7 @@ import {
 } from "./api/auth.js";
 import {
     handlerCreateChirps,
+    handlerDeleteChirp,
     handlerGetAllChirps,
     handlerGetChirp
 } from "./api/chirps.js";
@@ -48,14 +49,17 @@ app.post("/admin/reset", (req, res, next) => {
 });
 
 /* API endpoints */
-app.post("/api/chirps", (req, res, next) => {
-    Promise.resolve(handlerCreateChirps(req, res)).catch(next);
-});
+app.delete("/api/chirps/:chirpID", (req, res, next) => {
+    Promise.resolve(handlerDeleteChirp(req, res)).catch(next);
+})
 app.get("/api/chirps", (req, res, next) => {
     Promise.resolve(handlerGetAllChirps(req, res)).catch(next);
 });
 app.get("/api/chirps/:chirpID", (req, res, next) => {
     Promise.resolve(handlerGetChirp(req, res)).catch(next);
+});
+app.post("/api/chirps", (req, res, next) => {
+    Promise.resolve(handlerCreateChirps(req, res)).catch(next);
 });
 
 app.get("/api/healthz", (req, res, next) => {
