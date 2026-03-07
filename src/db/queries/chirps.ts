@@ -19,3 +19,7 @@ export async function getChirp(id: string) {
     }
     return result[0];
 }
+
+export async function deleteChirp(id: string) {
+    await db.delete(chirps).where(eq(chirps.id, id));
+}

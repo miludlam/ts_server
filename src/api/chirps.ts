@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 
-import { createChirp, getAllChirps, getChirp } from "../db/queries/chirps.js";
-import { ErrorBadRequest, ErrorNotFound } from "./errors.js";
+import {createChirp, deleteChirp, getAllChirps, getChirp} from "../db/queries/chirps.js";
+import { ErrorBadRequest, ErrorNotFound, ErrorForbidden } from "./errors.js";
 import { responseJSON } from "./json.js";
 import { getBearerToken, validateJWT } from "../auth.js";
 import { config } from "../config.js";
@@ -52,5 +52,17 @@ function validateAndCensor(input: string): string {
 }
 
 export async function handlerDeleteChirp(req: Request, res: Response) {
+    const token = getBearerToken(req);
+    const userID = validateJWT(token, config.jwt.secret);
 
+    const { chirpID } = req.params;
+    const chirp = await getChirp(chirpID);
+    if (!chirp) {
+        throw new ErrorNotFound(`Could not find chirp with id ${chirpID}`);
+    } else if (chirp.userId !== userID) {
+        throw new ErrorForbidden(`User not allowed to delete chirp with id ${userID}`);
+    }
+
+    await deleteChirp(chirpID);
+    res.status(204).send();
 }
