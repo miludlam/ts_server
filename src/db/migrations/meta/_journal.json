@@ -29,6 +29,13 @@
       "when": 1771380003053,
       "tag": "0003_wooden_harpoon",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1773004164238,
+      "tag": "0004_illegal_blue_blade",
+      "breakpoints": true
     }
   ]
 }

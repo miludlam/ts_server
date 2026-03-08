@@ -26,8 +26,9 @@ import { handlerReadiness } from "./api/readiness.js";
 import { handlerReset } from "./api/reset.js";
 import {
     handlerCreateUser,
-    handlerUpdateUser
+    handlerUpdateUser,
 } from "./api/users.js";
+import { handlerUpgradeUser } from "./api/webhooks.js";
 
 const migrationClient = postgres(config.db.url, {max: 1});
 await migrate(drizzle(migrationClient), config.db.migrationConfig);
@@ -68,6 +69,10 @@ app.get("/api/healthz", (req, res, next) => {
 
 app.post("/api/login", (req, res, next) => {
     Promise.resolve(handlerLogin(req, res)).catch(next);
+});
+
+app.post("/api/polka/webhooks", (req, res, next) => {
+    Promise.resolve(handlerUpgradeUser(req, res)).catch(next);
 });
 
 app.post("/api/refresh", (req, res, next) => {

@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
 
-import {createChirp, deleteChirp, getAllChirps, getChirp} from "../db/queries/chirps.js";
+import {
+    createChirp,
+    deleteChirp,
+    getAllChirps,
+    getChirp
+} from "../db/queries/chirps.js";
 import { ErrorBadRequest, ErrorNotFound, ErrorForbidden } from "./errors.js";
 import { responseJSON } from "./json.js";
 import { getBearerToken, validateJWT } from "../auth.js";
