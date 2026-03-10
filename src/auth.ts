@@ -60,3 +60,10 @@ export function getBearerToken(req: Request) {
 export function makeRefreshToken() {
     return crypto.randomBytes(32).toString("hex");
 }
+
+export function getAPIKey(req: Request) {
+    const key = req.get("Authorization")?.replace(/^ApiKey\s+/, '');
+    if (!key || key === req.get("Authorization")) throw new ErrorUnauthorized("Malformed authorization header");
+
+    return key;
+}
