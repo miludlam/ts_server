@@ -4,15 +4,21 @@ import {
     createChirp,
     deleteChirp,
     getAllChirps,
-    getChirp
+    getChirp,
 } from "../db/queries/chirps.js";
 import { ErrorBadRequest, ErrorNotFound, ErrorForbidden } from "./errors.js";
 import { responseJSON } from "./json.js";
 import { getBearerToken, validateJWT } from "../auth.js";
 import { config } from "../config.js";
 
-export async function handlerGetAllChirps(_: Request, res: Response) {
-    const chirps = await getAllChirps();
+export async function handlerGetAllChirps(req: Request, res: Response) {
+    let authorId = ""
+    let authorIdQuery = req.query.authorId;
+    if (typeof(authorIdQuery) === "string") {
+        authorId = authorIdQuery;
+    }
+
+    const chirps = await getAllChirps(authorId);
     responseJSON(res, 200, chirps);
 }
 
