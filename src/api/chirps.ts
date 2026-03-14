@@ -12,13 +12,21 @@ import { getBearerToken, validateJWT } from "../auth.js";
 import { config } from "../config.js";
 
 export async function handlerGetAllChirps(req: Request, res: Response) {
+    // Check for sort order
+    let sort = "asc";
+    let sortQuery = req.query.sort;
+    if (typeof(sortQuery) === "string" && (sortQuery === "asc" || sortQuery === "desc")) {
+        sort = sortQuery;
+    }
+
+    // Check for author ID
     let authorId = ""
     let authorIdQuery = req.query.authorId;
     if (typeof(authorIdQuery) === "string") {
         authorId = authorIdQuery;
     }
 
-    const chirps = await getAllChirps(authorId);
+    const chirps = await getAllChirps(sort, authorId);
     responseJSON(res, 200, chirps);
 }
 
